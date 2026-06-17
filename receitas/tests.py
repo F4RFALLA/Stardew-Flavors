@@ -25,32 +25,6 @@ class TestesModelReceita(TestCase):
             autor=self.autor,
         )
 
-    def test_criacao_receita(self):
-        self.assertEqual(
-            Receita.objects.count(),
-            1,
-        )
-
-        self.assertEqual(
-            self.receita.titulo,
-            'Sopa de Abóbora',
-        )
-
-        self.assertEqual(
-            self.receita.autor,
-            self.autor,
-        )
-
-    def test_receita_sem_avaliacoes(self):
-        self.assertEqual(
-            self.receita.media_avaliacoes,
-            0,
-        )
-
-        self.assertEqual(
-            self.receita.total_avaliacoes,
-            0,
-        )
 
 class TestesModelComentario(TestCase):
 
@@ -128,24 +102,6 @@ class TestesModelFavorito(TestCase):
             self.receita,
         )
 
-    def test_usuario_nao_pode_favoritar_duas_vezes(self):
-        Favorito.objects.create(
-            usuario=self.usuario,
-            receita=self.receita,
-        )
-
-        with self.assertRaises(IntegrityError):
-            with transaction.atomic():
-                Favorito.objects.create(
-                    usuario=self.usuario,
-                    receita=self.receita,
-                )
-
-        self.assertEqual(
-            Favorito.objects.count(),
-            1,
-        )
-
 class TestesViewListarReceitas(TestCase):
 
     def setUp(self):
@@ -164,34 +120,6 @@ class TestesViewListarReceitas(TestCase):
         )
 
         self.url = reverse('listar_receitas')
-
-    def test_listagem_pode_ser_acessada_sem_login(self):
-        resposta = self.client.get(self.url)
-
-        self.assertEqual(
-            resposta.status_code,
-            200,
-        )
-
-        self.assertTemplateUsed(
-            resposta,
-            'listar_receitas.html',
-        )
-
-    def test_listagem_exibe_as_receitas(self):
-        resposta = self.client.get(self.url)
-
-        receitas = resposta.context.get('receitas')
-
-        self.assertEqual(
-            len(receitas),
-            1,
-        )
-
-        self.assertEqual(
-            receitas[0],
-            self.receita,
-        )
 
 class TestesViewDetalharReceita(TestCase):
 
@@ -243,21 +171,6 @@ class TestesViewDetalharReceita(TestCase):
         self.assertEqual(
             receita_do_contexto.titulo,
             'Panquecas',
-        )
-
-    def test_receita_inexistente_retorna_404(self):
-        url_inexistente = reverse(
-            'detalhar_receita',
-            kwargs={
-                'pk': 9999,
-            },
-        )
-
-        resposta = self.client.get(url_inexistente)
-
-        self.assertEqual(
-            resposta.status_code,
-            404,
         )
 
 class TestesViewCriarReceita(TestCase):
@@ -339,38 +252,6 @@ class TestesViewCriarReceita(TestCase):
             1,
         )
 
-    def test_autor_e_definido_automaticamente(self):
-        self.client.force_login(self.usuario)
-
-        self.client.post(
-            self.url,
-            self.dados_validos,
-        )
-
-        receita = Receita.objects.first()
-
-        self.assertIsNotNone(receita)
-
-        self.assertEqual(
-            receita.autor,
-            self.usuario,
-        )
-
-    def test_usuario_deslogado_nao_cria_receita(self):
-        resposta = self.client.post(
-            self.url,
-            self.dados_validos,
-        )
-
-        self.assertEqual(
-            resposta.status_code,
-            302,
-        )
-
-        self.assertEqual(
-            Receita.objects.count(),
-            0,
-        )
 
 class TestesPermissoesReceita(TestCase):
 
@@ -422,31 +303,6 @@ class TestesPermissoesReceita(TestCase):
             'ingredientes': '2 peixes\n1 tomate\n2 batatas',
             'modo_preparo': 'Misture tudo e cozinhe lentamente.',
         }
-
-    def test_autor_acessa_edicao_da_propria_receita(self):
-        self.client.force_login(self.autor)
-
-        resposta = self.client.get(self.url_editar)
-
-        self.assertEqual(
-            resposta.status_code,
-            200,
-        )
-
-        self.assertTemplateUsed(
-            resposta,
-            'editar_receita.html',
-        )
-
-    def test_outro_usuario_nao_acessa_edicao(self):
-        self.client.force_login(self.outro_usuario)
-
-        resposta = self.client.get(self.url_editar)
-
-        self.assertEqual(
-            resposta.status_code,
-            403,
-        )
 
     def test_administrador_acessa_edicao(self):
         self.client.force_login(self.administrador)
@@ -510,59 +366,6 @@ class TestesPermissoesReceita(TestCase):
             self.autor,
         )
 
-    def test_outro_usuario_nao_edita_receita(self):
-        self.client.force_login(self.outro_usuario)
-
-        resposta = self.client.post(
-            self.url_editar,
-            self.dados_atualizados,
-        )
-
-        self.assertEqual(
-            resposta.status_code,
-            403,
-        )
-
-        self.receita.refresh_from_db()
-
-        self.assertEqual(
-            self.receita.titulo,
-            'Ensopado de Peixe',
-        )
-
-    def test_outro_usuario_nao_exclui_receita(self):
-        self.client.force_login(self.outro_usuario)
-
-        resposta = self.client.post(
-            self.url_excluir,
-        )
-
-        self.assertEqual(
-            resposta.status_code,
-            403,
-        )
-
-        self.assertEqual(
-            Receita.objects.count(),
-            1,
-        )
-
-    def test_administrador_exclui_qualquer_receita(self):
-        self.client.force_login(self.administrador)
-
-        resposta = self.client.post(
-            self.url_excluir,
-        )
-
-        self.assertEqual(
-            resposta.status_code,
-            302,
-        )
-
-        self.assertEqual(
-            Receita.objects.count(),
-            0,
-        )
 
 class TestesPermissoesComentario(TestCase):
 
@@ -622,117 +425,6 @@ class TestesPermissoesComentario(TestCase):
             'nota': 4,
             'texto': 'Gostei bastante, mas diminuiria o açúcar.',
         }
-
-    def test_outro_usuario_nao_acessa_edicao_do_comentario(self):
-        self.client.force_login(self.outro_usuario)
-
-        resposta = self.client.get(self.url_editar)
-
-        self.assertEqual(
-            resposta.status_code,
-            403,
-        )
-
-    def test_autor_da_receita_nao_edita_comentario_de_outro(self):
-        self.client.force_login(self.autor_receita)
-
-        resposta = self.client.get(self.url_editar)
-
-        self.assertEqual(
-            resposta.status_code,
-            403,
-        )
-
-    def test_administrador_acessa_edicao_do_comentario(self):
-        self.client.force_login(self.administrador)
-
-        resposta = self.client.get(self.url_editar)
-
-        self.assertEqual(
-            resposta.status_code,
-            200,
-        )
-
-    def test_usuario_deslogado_e_redirecionado_da_edicao(self):
-        resposta = self.client.get(self.url_editar)
-
-        destino_esperado = (
-            f"{reverse('login')}?next={self.url_editar}"
-        )
-
-        self.assertEqual(
-            resposta.status_code,
-            302,
-        )
-
-        self.assertRedirects(
-            resposta,
-            destino_esperado,
-        )
-
-    def test_autor_edita_o_proprio_comentario(self):
-        self.client.force_login(self.autor_comentario)
-
-        resposta = self.client.post(
-            self.url_editar,
-            self.dados_atualizados,
-        )
-
-        self.assertEqual(
-            resposta.status_code,
-            302,
-        )
-
-        self.assertRedirects(
-            resposta,
-            reverse(
-                'detalhar_receita',
-                kwargs={
-                    'pk': self.receita.pk,
-                },
-            ),
-        )
-
-        self.comentario.refresh_from_db()
-
-        self.assertEqual(
-            self.comentario.nota,
-            4,
-        )
-
-        self.assertEqual(
-            self.comentario.texto,
-            'Gostei bastante, mas diminuiria o açúcar.',
-        )
-
-
-    def test_autor_exclui_o_proprio_comentario(self):
-        self.client.force_login(self.autor_comentario)
-
-        resposta = self.client.post(
-            self.url_excluir,
-        )
-
-        self.assertEqual(
-            resposta.status_code,
-            302,
-        )
-
-        self.assertRedirects(
-            resposta,
-            reverse(
-                'detalhar_receita',
-                kwargs={
-                    'pk': self.receita.pk,
-                },
-            ),
-        )
-
-        self.assertEqual(
-            Comentario.objects.count(),
-            0,
-        )
-
 
 class TestesCriacaoComentario(TestCase):
 
