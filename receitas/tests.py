@@ -21,7 +21,6 @@ class TestesModelReceita(TestCase):
             autor=cls.autor,
         )
     
-    # Nota: A classe original não possuía métodos de teste definidos.
 
 
 class TestesModelComentario(TestCase):
@@ -85,9 +84,6 @@ class TestesViewListarReceitas(TestCase):
             autor=cls.usuario,
         )
         cls.url = reverse('listar_receitas')
-        
-    # Nota: A classe original não possuía métodos de teste definidos.
-
 
 class TestesViewDetalharReceita(TestCase):
     @classmethod
@@ -202,7 +198,6 @@ class TestesPermissoesReceita(TestCase):
         self.assertEqual(resposta.status_code, 302)
         self.assertRedirects(resposta, reverse('detalhar_receita', kwargs={'pk': self.receita.pk}))
 
-        # Atualiza a instância da receita com os dados mais recentes do banco
         self.receita.refresh_from_db()
         self.assertEqual(self.receita.titulo, 'Ensopado de Peixe Especial')
         self.assertEqual(self.receita.autor, self.autor)
@@ -239,8 +234,6 @@ class TestesPermissoesComentario(TestCase):
             'texto': 'Gostei bastante, mas diminuiria o açúcar.',
         }
 
-    # Nota: A classe original não possuía métodos de teste definidos.
-
 
 class TestesCriacaoComentario(TestCase):
     @classmethod
@@ -262,5 +255,3 @@ class TestesCriacaoComentario(TestCase):
             'nota': 5,
             'texto': 'A receita ficou excelente.',
         }
-    
-    # Nota: A classe original não possuía métodos de teste definidos.
