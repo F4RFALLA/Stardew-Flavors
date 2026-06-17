@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Entrar | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="caixa-formulario">
+        <h1>Entrar no Vale</h1>
+
+        <p class="descricao-formulario">
+            Entre na sua conta para publicar receitas,
+            comentar, avaliar e salvar seus pratos favoritos.
+        </p>
+
+        {% if mensagem %}
+            <div class="mensagem-erro">
+                {{ mensagem }}
+            </div>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+
+            <div class="grupo-campo">
+                <label for="user">
+                    Nome de usuário
+                </label>
+
+                <input
+                    type="text"
+                    name="user"
+                    id="user"
+                    value="{{ usuario_digitado|default:'' }}"
+                    placeholder="Digite seu nome de usuário"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="grupo-campo">
+                <label for="password">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <div class="acoes-formulario">
+                <a
+                    href="{% url 'home' %}"
+                    class="botao-padrao"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="botao-padrao"
+                >
+                    Entrar
+                </button>
+            </div>
+        </form>
+
+        <p class="link-auxiliar">
+            Ainda não tem uma conta?
+
+            <a href="{% url 'cadastro' %}">
+                Criar conta
+            </a>
+        </p>
+    </section>
+{% endblock %}

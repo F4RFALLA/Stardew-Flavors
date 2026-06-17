@@ -1,0 +1,7 @@
+{
+  "name": "stardew-flavors-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

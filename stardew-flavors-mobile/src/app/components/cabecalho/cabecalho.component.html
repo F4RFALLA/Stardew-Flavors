@@ -1,0 +1,147 @@
+<ion-header
+  *ngIf="estadoSessao$ | async as sessao"
+>
+  <ion-toolbar>
+    <div class="cabecalho-conteudo">
+      <button
+        type="button"
+        class="botao-menu"
+        [class.ativo]="menuAberto"
+        [attr.aria-expanded]="menuAberto"
+        aria-controls="menu-mobile"
+        aria-label="Abrir ou fechar menu"
+        (click)="alternarMenu()"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <a
+        routerLink="/home"
+        class="marca"
+        (click)="fecharMenu()"
+      >
+        Stardew Flavors
+      </a>
+
+      <div class="acoes-rapidas">
+        <button
+          *ngIf="sessao.autenticado"
+          type="button"
+          class="botao-padrao"
+          (click)="sair()"
+        >
+          Sair
+        </button>
+
+        <a
+          *ngIf="!sessao.autenticado"
+          routerLink="/login"
+          class="botao-padrao"
+          (click)="fecharMenu()"
+        >
+          Entrar
+        </a>
+      </div>
+
+      <nav class="navegacao-desktop">
+        <a
+          routerLink="/home"
+          (click)="fecharMenu()"
+        >
+          Início
+        </a>
+
+        <a
+          routerLink="/favoritos"
+          (click)="fecharMenu()"
+        >
+          Favoritos
+        </a>
+
+        <a
+          *ngIf="sessao.autenticado"
+          routerLink="/receitas/criar"
+          (click)="fecharMenu()"
+        >
+          Criar receita
+        </a>
+
+        <ng-container
+          *ngIf="
+            sessao.autenticado;
+            else visitanteDesktop
+          "
+        >
+          <span class="nome-usuario">
+            Olá, {{ sessao.nomeUsuario }}
+          </span>
+
+          <button
+            type="button"
+            class="botao-padrao"
+            (click)="sair()"
+          >
+            Sair
+          </button>
+        </ng-container>
+
+        <ng-template #visitanteDesktop>
+          <a
+            routerLink="/login"
+            class="botao-padrao"
+            (click)="fecharMenu()"
+          >
+            Entrar
+          </a>
+
+        <a
+          routerLink="/cadastro"
+          class="botao-padrao"
+          (click)="fecharMenu()"
+        >
+          Criar conta
+        </a>
+        </ng-template>
+      </nav>
+    </div>
+  </ion-toolbar>
+
+  <nav
+    id="menu-mobile"
+    class="navegacao-mobile"
+    *ngIf="menuAberto"
+  >
+    <a
+      routerLink="/home"
+      (click)="fecharMenu()"
+    >
+      Início
+    </a>
+
+    <a
+      routerLink="/favoritos"
+      (click)="fecharMenu()"
+    >
+      Favoritos
+    </a>
+
+    <a
+      *ngIf="sessao.autenticado"
+      routerLink="/receitas/criar"
+      (click)="fecharMenu()"
+    >
+      Criar receita
+    </a>
+
+    <a
+      *ngIf="!sessao.autenticado"
+      routerLink="/cadastro"
+      class="botao-padrao"
+      (click)="fecharMenu()"
+    >
+      Criar conta
+    </a>
+  </nav>
+</ion-header>

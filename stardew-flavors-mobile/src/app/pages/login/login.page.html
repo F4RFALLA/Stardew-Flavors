@@ -1,0 +1,91 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <main class="conteudo-principal-mobile">
+    <section class="caixa-formulario">
+      <h1>
+        Entrar no Vale
+      </h1>
+
+      <p class="descricao-formulario">
+        Entre na sua conta para publicar receitas,
+        comentar, avaliar e salvar seus pratos favoritos.
+      </p>
+
+      <div
+        class="mensagem-erro"
+        *ngIf="mensagemErro"
+      >
+        {{ mensagemErro }}
+      </div>
+
+      <form (ngSubmit)="entrar()">
+        <div class="grupo-campo">
+          <label for="nomeUsuario">
+            Nome de usuário
+          </label>
+
+          <input
+            type="text"
+            name="nomeUsuario"
+            id="nomeUsuario"
+            [(ngModel)]="nomeUsuario"
+            [disabled]="carregando"
+            placeholder="Digite seu nome de usuário"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="grupo-campo">
+          <label for="senha">
+            Senha
+          </label>
+
+          <input
+            type="password"
+            name="senha"
+            id="senha"
+            [(ngModel)]="senha"
+            [disabled]="carregando"
+            placeholder="Digite sua senha"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <div class="acoes-formulario">
+          <a
+            routerLink="/home"
+            class="botao-padrao"
+          >
+            Cancelar
+          </a>
+
+          <button
+            type="submit"
+            class="botao-padrao"
+            [disabled]="carregando"
+          >
+            <ion-spinner
+              *ngIf="carregando"
+              name="crescent"
+            ></ion-spinner>
+
+            <span *ngIf="!carregando">
+              Entrar
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <p class="link-auxiliar">
+        Ainda não tem uma conta?
+
+        <a routerLink="/cadastro">
+          Criar conta
+        </a>
+      </p>
+    </section>
+  </main>
+</ion-content>

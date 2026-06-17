@@ -1,0 +1,742 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <main class="conteudo-principal">
+    <div
+      class="carregamento"
+      *ngIf="carregando"
+    >
+      <ion-spinner name="crescent"></ion-spinner>
+
+      <span>
+        Carregando receita...
+      </span>
+    </div>
+
+    <div
+      class="mensagem-erro"
+      *ngIf="!carregando && mensagemErro"
+    >
+      <span>
+        {{ mensagemErro }}
+      </span>
+
+      <button
+        type="button"
+        class="botao-padrao"
+        (click)="carregarPagina()"
+      >
+        Tentar novamente
+      </button>
+
+      <a
+        routerLink="/home"
+        class="botao-secundario"
+      >
+        Voltar ao início
+      </a>
+    </div>
+
+    <ng-container
+      *ngIf="!carregando && receita"
+    >
+      <a
+        routerLink="/home"
+        class="voltar-receitas"
+      >
+        ← Voltar para as receitas
+      </a>
+
+      <article class="pagina-receita">
+        <section class="cabecalho-receita">
+          <div class="imagem-detalhes-receita">
+            <img
+              *ngIf="receita.imagem_exibicao"
+              [src]="receita.imagem_exibicao"
+              [alt]="'Imagem da receita ' + receita.titulo"
+            >
+
+            <div
+              class="receita-sem-imagem"
+              *ngIf="!receita.imagem_exibicao"
+            >
+              Receita sem imagem
+            </div>
+          </div>
+
+          <div class="informacoes-receita">
+            <span class="rotulo">
+              Receita do Vale
+            </span>
+
+            <div class="titulo-receita">
+              <h1>
+                {{ receita.titulo }}
+              </h1>
+
+              <span
+                class="favoritada"
+                *ngIf="receita.favoritada_pelo_usuario"
+                title="Receita favoritada"
+              >
+                ♥
+              </span>
+            </div>
+
+            <p class="descricao-receita">
+              {{ receita.descricao }}
+            </p>
+
+            <div class="metadados-receita">
+              <p *ngIf="receita.origem">
+                <strong>Origem:</strong>
+                {{ receita.origem }}
+              </p>
+
+              <p>
+                <strong>Autor:</strong>
+                {{ receita.autor }}
+              </p>
+
+              <p>
+                <strong>Avaliação:</strong>
+
+                {{
+                  receita.media_avaliacoes
+                    | number:'1.1-1'
+                }}
+                / 5
+              </p>
+
+              <p>
+                <strong>Total de avaliações:</strong>
+                {{ receita.total_avaliacoes }}
+              </p>
+
+              <p>
+                <strong>Publicada em:</strong>
+
+                {{
+                  receita.data_publicacao
+                    | date:'dd/MM/yyyy HH:mm'
+                }}
+              </p>
+            </div>
+
+            <div class="acoes-receita">
+              <button
+                type="button"
+                class="botao-favorito"
+                [class.esta-favoritada]="
+                  receita.favoritada_pelo_usuario
+                "
+                [disabled]="alterandoFavorito"
+                (click)="alternarFavorito()"
+              >
+                <ion-spinner
+                  *ngIf="alterandoFavorito"
+                  name="crescent"
+                ></ion-spinner>
+
+                <ng-container
+                  *ngIf="!alterandoFavorito"
+                >
+                  <span class="icone-favorito">
+                    {{
+                      receita.favoritada_pelo_usuario
+                        ? '♥'
+                        : '♡'
+                    }}
+                  </span>
+
+                  <span>
+                    {{
+                      receita.favoritada_pelo_usuario
+                        ? 'Remover dos favoritos'
+                        : 'Adicionar aos favoritos'
+                    }}
+                  </span>
+                </ng-container>
+              </button>
+
+              <p
+                class="aviso-login"
+                *ngIf="!autenticado"
+              >
+                Entre na sua conta para salvar esta receita.
+              </p>
+            </div>
+
+            <div
+              class="mensagem-acao"
+              [class.mensagem-acao-erro]="
+                mensagemAcaoErro
+              "
+              *ngIf="mensagemAcao"
+            >
+              {{ mensagemAcao }}
+            </div>
+
+            <section
+              class="gerenciamento-receita"
+              *ngIf="podeGerenciarReceita()"
+            >
+              <h2>
+                Gerenciar receita
+              </h2>
+
+              <div
+                class="acoes-gerenciamento-receita"
+                *ngIf="!confirmandoExclusaoReceita"
+              >
+                <button
+                  type="button"
+                  class="botao-editar-receita"
+                  [disabled]="excluindoReceita"
+                  (click)="irParaEdicaoReceita()"
+                >
+                  Editar receita
+                </button>
+
+                <button
+                  type="button"
+                  class="botao-excluir-receita"
+                  [disabled]="excluindoReceita"
+                  (click)="solicitarExclusaoReceita()"
+                >
+                  Excluir receita
+                </button>
+              </div>
+
+              <div
+                class="confirmacao-exclusao-receita"
+                *ngIf="confirmandoExclusaoReceita"
+              >
+                <strong>
+                  Excluir esta receita?
+                </strong>
+
+                <p>
+                  A receita, seus comentários e avaliações
+                  poderão ser removidos permanentemente.
+                </p>
+
+                <div class="acoes-confirmacao-receita">
+                  <button
+                    type="button"
+                    class="botao-cancelar-exclusao-receita"
+                    [disabled]="excluindoReceita"
+                    (click)="cancelarExclusaoReceita()"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="button"
+                    class="botao-confirmar-exclusao-receita"
+                    [disabled]="excluindoReceita"
+                    (click)="confirmarExclusaoReceita()"
+                  >
+                    <ion-spinner
+                      *ngIf="excluindoReceita"
+                      name="crescent"
+                    ></ion-spinner>
+
+                    <span *ngIf="!excluindoReceita">
+                      Excluir definitivamente
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="mensagem-gerenciamento-receita"
+                [class.mensagem-gerenciamento-receita-erro]="
+                  mensagemGerenciamentoReceitaErro
+                "
+                *ngIf="mensagemGerenciamentoReceita"
+              >
+                {{ mensagemGerenciamentoReceita }}
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="conteudo-da-receita">
+          <div class="secao-receita">
+            <h2>
+              Ingredientes
+            </h2>
+
+            <p class="texto-livre-receita">
+              {{ receita.ingredientes }}
+            </p>
+          </div>
+
+          <div class="secao-receita">
+            <h2>
+              Modo de preparo
+            </h2>
+
+            <p class="texto-livre-receita">
+              {{ receita.modo_preparo }}
+            </p>
+          </div>
+        </section>
+      </article>
+
+      <section class="secao-comentarios">
+        <header class="cabecalho-comentarios">
+          <div>
+            <span class="rotulo-comentarios">
+              Comunidade do Vale
+            </span>
+
+            <h2>
+              Comentários e avaliações
+            </h2>
+          </div>
+
+          <span class="quantidade-comentarios">
+            {{ comentarios.length }}
+          </span>
+        </header>
+
+        <form
+          *ngIf="autenticado"
+          class="formulario-comentario"
+          (ngSubmit)="publicarComentario()"
+        >
+          <fieldset class="grupo-nota">
+            <legend>
+              Sua nota
+            </legend>
+
+            <div class="seletor-estrelas">
+              <button
+                *ngFor="let estrela of estrelas"
+                type="button"
+                class="botao-estrela"
+                [class.ativa]="
+                  estrela <= notaComentario
+                "
+                [attr.aria-pressed]="
+                  estrela <= notaComentario
+                "
+                [attr.aria-label]="
+                  'Dar nota '
+                  + estrela
+                  + ' de 5'
+                "
+                [disabled]="enviandoComentario"
+                (click)="selecionarNota(estrela)"
+              >
+                ★
+              </button>
+            </div>
+
+            <span
+              class="nota-selecionada"
+              *ngIf="notaComentario > 0"
+            >
+              {{ notaComentario }} de 5
+            </span>
+          </fieldset>
+
+          <div class="grupo-campo-comentario">
+            <label for="textoComentario">
+              Seu comentário
+            </label>
+
+            <textarea
+              id="textoComentario"
+              name="textoComentario"
+              rows="5"
+              [(ngModel)]="textoComentario"
+              [disabled]="enviandoComentario"
+              placeholder="Conte o que achou desta receita..."
+              required
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="botao-publicar-comentario"
+            [disabled]="enviandoComentario"
+          >
+            <ion-spinner
+              *ngIf="enviandoComentario"
+              name="crescent"
+            ></ion-spinner>
+
+            <span *ngIf="!enviandoComentario">
+              Publicar comentário
+            </span>
+          </button>
+
+          <div
+            class="mensagem-comentario"
+            [class.mensagem-comentario-erro]="
+              mensagemComentarioErro
+            "
+            *ngIf="mensagemComentario"
+          >
+            {{ mensagemComentario }}
+          </div>
+        </form>
+
+        <div
+          class="convite-login-comentario"
+          *ngIf="!autenticado"
+        >
+          <p>
+            Entre na sua conta para comentar
+            e avaliar esta receita.
+          </p>
+
+          <button
+            type="button"
+            class="botao-entrar-comentario"
+            (click)="irParaLogin()"
+          >
+            Entrar para comentar
+          </button>
+        </div>
+
+        <div
+          class="carregando-comentarios"
+          *ngIf="carregandoComentarios"
+        >
+          <ion-spinner name="crescent"></ion-spinner>
+
+          <span>
+            Carregando comentários...
+          </span>
+        </div>
+
+        <div
+          class="erro-comentarios"
+          *ngIf="
+            !carregandoComentarios
+            && mensagemErroComentarios
+          "
+        >
+          <span>
+            {{ mensagemErroComentarios }}
+          </span>
+
+          <button
+            type="button"
+            (click)="carregarComentarios()"
+          >
+            Tentar novamente
+          </button>
+        </div>
+
+        <div
+          class="mensagem-gerenciamento-comentario"
+          [class.mensagem-gerenciamento-erro]="
+            mensagemGerenciamentoErro
+          "
+          *ngIf="mensagemGerenciamentoComentario"
+        >
+          {{ mensagemGerenciamentoComentario }}
+        </div>
+
+        <div
+          class="lista-comentarios"
+          *ngIf="
+            !carregandoComentarios
+            && !mensagemErroComentarios
+          "
+        >
+          <article
+            class="cartao-comentario"
+            *ngFor="let comentario of comentarios"
+          >
+            <header class="topo-comentario">
+              <div>
+                <strong>
+                  {{ comentario.autor }}
+                </strong>
+
+                <time
+                  [attr.datetime]="
+                    comentario.data_publicacao
+                  "
+                >
+                  {{
+                    comentario.data_publicacao
+                      | date:'dd/MM/yyyy HH:mm'
+                  }}
+                </time>
+              </div>
+
+              <div
+                class="nota-comentario"
+                [attr.aria-label]="
+                  'Nota '
+                  + comentario.nota
+                  + ' de 5'
+                "
+              >
+                <span
+                  *ngFor="let estrela of estrelas"
+                  [class.preenchida]="
+                    estrela <= comentario.nota
+                  "
+                >
+                  ★
+                </span>
+              </div>
+            </header>
+
+            <ng-container
+              *ngIf="
+                comentarioEmEdicaoId
+                  !== comentario.id;
+                else formularioEdicaoComentario
+              "
+            >
+              <p>
+                {{ comentario.texto }}
+              </p>
+
+              <div
+                class="acoes-gerenciamento-comentario"
+                *ngIf="
+                  podeGerenciarComentario(comentario)
+                  && confirmandoExclusaoId
+                    !== comentario.id
+                "
+              >
+                <button
+                  type="button"
+                  class="botao-editar-comentario"
+                  [disabled]="
+                    salvandoComentarioId !== null
+                    || excluindoComentarioId !== null
+                  "
+                  (click)="iniciarEdicao(comentario)"
+                >
+                  Editar
+                </button>
+
+                <button
+                  type="button"
+                  class="botao-excluir-comentario"
+                  [disabled]="
+                    salvandoComentarioId !== null
+                    || excluindoComentarioId !== null
+                  "
+                  (click)="solicitarExclusao(comentario)"
+                >
+                  Excluir
+                </button>
+              </div>
+
+              <div
+                class="confirmacao-exclusao-comentario"
+                *ngIf="
+                  confirmandoExclusaoId
+                    === comentario.id
+                "
+              >
+                <strong>
+                  Excluir este comentário?
+                </strong>
+
+                <p>
+                  Esta ação não poderá ser desfeita.
+                </p>
+
+                <div class="acoes-confirmacao-comentario">
+                  <button
+                    type="button"
+                    class="botao-cancelar-comentario"
+                    [disabled]="
+                      excluindoComentarioId
+                        === comentario.id
+                    "
+                    (click)="cancelarExclusao()"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="button"
+                    class="botao-confirmar-exclusao"
+                    [disabled]="
+                      excluindoComentarioId
+                        === comentario.id
+                    "
+                    (click)="
+                      confirmarExclusaoComentario(
+                        comentario.id
+                      )
+                    "
+                  >
+                    <ion-spinner
+                      *ngIf="
+                        excluindoComentarioId
+                          === comentario.id
+                      "
+                      name="crescent"
+                    ></ion-spinner>
+
+                    <span
+                      *ngIf="
+                        excluindoComentarioId
+                          !== comentario.id
+                      "
+                    >
+                      Confirmar exclusão
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-template
+              #formularioEdicaoComentario
+            >
+              <form
+                class="formulario-edicao-comentario"
+                (ngSubmit)="salvarEdicaoComentario()"
+              >
+                <fieldset class="grupo-nota">
+                  <legend>
+                    Alterar nota
+                  </legend>
+
+                  <div class="seletor-estrelas">
+                    <button
+                      *ngFor="let estrela of estrelas"
+                      type="button"
+                      class="botao-estrela"
+                      [class.ativa]="
+                        estrela
+                          <= notaEdicaoComentario
+                      "
+                      [attr.aria-pressed]="
+                        estrela
+                          <= notaEdicaoComentario
+                      "
+                      [attr.aria-label]="
+                        'Dar nota '
+                        + estrela
+                        + ' de 5'
+                      "
+                      [disabled]="
+                        salvandoComentarioId
+                          === comentario.id
+                      "
+                      (click)="
+                        selecionarNotaEdicao(estrela)
+                      "
+                    >
+                      ★
+                    </button>
+                  </div>
+
+                  <span
+                    class="nota-selecionada"
+                    *ngIf="
+                      notaEdicaoComentario > 0
+                    "
+                  >
+                    {{ notaEdicaoComentario }} de 5
+                  </span>
+                </fieldset>
+
+                <div class="grupo-campo-edicao">
+                  <label
+                    [for]="
+                      'textoEdicaoComentario-'
+                      + comentario.id
+                    "
+                  >
+                    Comentário
+                  </label>
+
+                  <textarea
+                    [id]="
+                      'textoEdicaoComentario-'
+                      + comentario.id
+                    "
+                    [name]="
+                      'textoEdicaoComentario-'
+                      + comentario.id
+                    "
+                    rows="5"
+                    [(ngModel)]="
+                      textoEdicaoComentario
+                    "
+                    [disabled]="
+                      salvandoComentarioId
+                        === comentario.id
+                    "
+                    required
+                  ></textarea>
+                </div>
+
+                <div class="acoes-edicao-comentario">
+                  <button
+                    type="button"
+                    class="botao-cancelar-comentario"
+                    [disabled]="
+                      salvandoComentarioId
+                        === comentario.id
+                    "
+                    (click)="cancelarEdicao()"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="submit"
+                    class="botao-salvar-comentario"
+                    [disabled]="
+                      salvandoComentarioId
+                        === comentario.id
+                    "
+                  >
+                    <ion-spinner
+                      *ngIf="
+                        salvandoComentarioId
+                          === comentario.id
+                      "
+                      name="crescent"
+                    ></ion-spinner>
+
+                    <span
+                      *ngIf="
+                        salvandoComentarioId
+                          !== comentario.id
+                      "
+                    >
+                      Salvar alterações
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </ng-template>
+          </article>
+
+          <div
+            class="sem-comentarios"
+            *ngIf="comentarios.length === 0"
+          >
+            <h3>
+              Ainda não há comentários
+            </h3>
+
+            <p>
+              Seja a primeira pessoa a avaliar esta receita.
+            </p>
+          </div>
+        </div>
+      </section>
+    </ng-container>
+  </main>
+</ion-content>

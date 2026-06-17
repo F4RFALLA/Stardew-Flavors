@@ -1,0 +1,188 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <main class="conteudo-principal">
+    <header class="titulo-pagina">
+      <span>
+        Sua coleção
+      </span>
+
+      <h1>
+        Receitas favoritas
+      </h1>
+
+      <p>
+        Aqui estão as receitas que você salvou
+        para preparar mais tarde.
+      </p>
+    </header>
+
+    <div
+      class="carregamento"
+      *ngIf="carregando"
+    >
+      <ion-spinner name="crescent"></ion-spinner>
+
+      <span>
+        Carregando favoritos...
+      </span>
+    </div>
+
+    <div
+      class="mensagem-erro"
+      *ngIf="!carregando && mensagemErro"
+    >
+      <span>
+        {{ mensagemErro }}
+      </span>
+
+      <button
+        type="button"
+        class="botao-padrao"
+        (click)="carregarFavoritos()"
+      >
+        Tentar novamente
+      </button>
+    </div>
+
+    <div
+      class="mensagem-acao"
+      [class.mensagem-acao-erro]="
+        mensagemAcaoErro
+      "
+      *ngIf="mensagemAcao"
+    >
+      {{ mensagemAcao }}
+    </div>
+
+    <section
+      class="grade-favoritos"
+      *ngIf="
+        !carregando
+        && !mensagemErro
+        && receitas.length > 0
+      "
+    >
+      <article
+        class="cartao-receita"
+        *ngFor="let receita of receitas"
+      >
+        <a
+          class="conteudo-link"
+          [routerLink]="[
+            '/receitas',
+            receita.id
+          ]"
+        >
+          <div class="cartao-imagem">
+            <img
+              *ngIf="receita.imagem_exibicao"
+              [src]="receita.imagem_exibicao"
+              [alt]="
+                'Imagem da receita '
+                + receita.titulo
+              "
+              loading="lazy"
+            >
+
+            <div
+              class="receita-sem-imagem"
+              *ngIf="!receita.imagem_exibicao"
+            >
+              Receita sem imagem
+            </div>
+          </div>
+
+          <div class="cartao-conteudo">
+            <div class="titulo-receita">
+              <h2>
+                {{ receita.titulo }}
+              </h2>
+
+              <span
+                class="icone-coracao"
+                aria-label="Receita favoritada"
+              >
+                ♥
+              </span>
+            </div>
+
+            <p class="descricao-receita">
+              {{ receita.descricao }}
+            </p>
+
+            <div class="informacoes-receita">
+              <span *ngIf="receita.origem">
+                Origem: {{ receita.origem }}
+              </span>
+
+              <span>
+                Autor: {{ receita.autor }}
+              </span>
+
+              <span>
+                Avaliação:
+                {{
+                  receita.media_avaliacoes
+                    | number:'1.1-1'
+                }}
+                / 5
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <div class="acoes-cartao">
+          <button
+            type="button"
+            class="botao-remover"
+            [disabled]="
+              removendoReceitaId !== null
+            "
+            (click)="removerFavorito(receita)"
+          >
+            <ion-spinner
+              *ngIf="
+                removendoReceitaId === receita.id
+              "
+              name="crescent"
+            ></ion-spinner>
+
+            <span
+              *ngIf="
+                removendoReceitaId !== receita.id
+              "
+            >
+              Remover dos favoritos
+            </span>
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <section
+      class="lista-vazia"
+      *ngIf="
+        !carregando
+        && !mensagemErro
+        && receitas.length === 0
+      "
+    >
+      <h2>
+        Nenhuma receita favoritada
+      </h2>
+
+      <p>
+        Abra uma receita e use o botão
+        “Adicionar aos favoritos”.
+      </p>
+
+      <a
+        routerLink="/home"
+        class="botao-padrao"
+      >
+        Ver receitas
+      </a>
+    </section>
+  </main>
+</ion-content>

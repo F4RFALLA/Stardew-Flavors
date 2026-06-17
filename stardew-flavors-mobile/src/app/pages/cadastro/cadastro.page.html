@@ -1,0 +1,135 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <main class="conteudo-principal-mobile">
+    <section class="caixa-formulario">
+      <span class="rotulo-formulario">
+        Comunidade do Vale
+      </span>
+
+      <h1>
+        Criar conta
+      </h1>
+
+      <p class="descricao-formulario">
+        Crie sua conta para compartilhar receitas,
+        comentar, avaliar e salvar seus pratos favoritos.
+      </p>
+
+      <div
+        class="mensagem-erro"
+        *ngIf="mensagemErro"
+      >
+        {{ mensagemErro }}
+      </div>
+
+      <form
+        #formularioCadastro="ngForm"
+        (ngSubmit)="cadastrar()"
+      >
+        <div class="grupo-campo">
+          <label for="nomeUsuario">
+            Nome de usuário
+          </label>
+
+          <input
+            type="text"
+            name="nomeUsuario"
+            id="nomeUsuario"
+            maxlength="150"
+            [(ngModel)]="nomeUsuario"
+            [disabled]="carregando"
+            placeholder="Escolha um nome de usuário"
+            autocomplete="username"
+            required
+          >
+
+          <small>
+            Use letras, números e os caracteres
+            @, ., +, - ou _.
+          </small>
+        </div>
+
+        <div class="grupo-campo">
+          <label for="senha">
+            Senha
+          </label>
+
+          <input
+            type="password"
+            name="senha"
+            id="senha"
+            minlength="8"
+            [(ngModel)]="senha"
+            [disabled]="carregando"
+            placeholder="Crie uma senha"
+            autocomplete="new-password"
+            required
+          >
+
+          <small>
+            Use pelo menos 8 caracteres e evite
+            senhas muito comuns ou somente numéricas.
+          </small>
+        </div>
+
+        <div class="grupo-campo">
+          <label for="confirmacaoSenha">
+            Confirmar senha
+          </label>
+
+          <input
+            type="password"
+            name="confirmacaoSenha"
+            id="confirmacaoSenha"
+            minlength="8"
+            [(ngModel)]="confirmacaoSenha"
+            [disabled]="carregando"
+            placeholder="Digite a senha novamente"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <div class="acoes-formulario">
+          <a
+            routerLink="/home"
+            class="botao-secundario"
+          >
+            Cancelar
+          </a>
+
+          <button
+            type="submit"
+            class="botao-padrao"
+            [disabled]="
+              carregando
+              || formularioCadastro.invalid
+            "
+          >
+            <ion-spinner
+              *ngIf="carregando"
+              name="crescent"
+            ></ion-spinner>
+
+            <span *ngIf="!carregando">
+              Criar conta
+            </span>
+
+            <span *ngIf="carregando">
+              Criando conta...
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <p class="link-auxiliar">
+        Já possui uma conta?
+
+        <a routerLink="/login">
+          Entrar
+        </a>
+      </p>
+    </section>
+  </main>
+</ion-content>

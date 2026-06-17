@@ -1,0 +1,396 @@
+:host {
+  --fundo: #f8e8c5;
+  --verde: #2f853f;
+  --verde-escuro: #256832;
+  --laranja: #c94e12;
+  --marrom: #9f5738;
+  --texto: #51382d;
+  --sombra: #b8a17d;
+  --erro: #a52d22;
+}
+
+ion-content {
+  --background:
+    radial-gradient(
+      circle at top left,
+      #ffe0a5 0,
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      #e4e9af 0,
+      transparent 34%
+    ),
+    var(--fundo);
+}
+
+.conteudo-principal {
+  width: min(760px, calc(100% - 28px));
+  margin: 30px auto;
+  padding-bottom: 40px;
+
+  color: var(--texto);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.cabecalho-pagina,
+.formulario-receita {
+  border: 4px double var(--marrom);
+  background-color: rgba(255, 245, 219, 0.97);
+  box-shadow: 7px 7px 0 var(--sombra);
+}
+
+.cabecalho-pagina {
+  margin-bottom: 28px;
+  padding: 30px 25px;
+
+  text-align: center;
+}
+
+.rotulo-pagina {
+  color: var(--verde);
+  font-weight: bold;
+}
+
+.cabecalho-pagina h1 {
+  margin: 8px 0 12px;
+
+  color: var(--laranja);
+  font-size: 2.3rem;
+}
+
+.cabecalho-pagina p {
+  margin: 0;
+}
+
+.formulario-receita {
+  padding: 32px;
+}
+
+.grupo-campo {
+  margin-bottom: 25px;
+}
+
+.grupo-campo label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: var(--verde);
+  font-weight: bold;
+}
+
+.grupo-campo input,
+.grupo-campo textarea {
+  width: 100%;
+  padding: 12px 14px;
+
+  border: 3px solid #b56d49;
+  border-radius: 0;
+
+  background-color: #f4dfbe;
+  color: var(--texto);
+
+  font: inherit;
+  line-height: 1.5;
+}
+
+.grupo-campo input {
+  min-height: 49px;
+}
+
+.grupo-campo textarea {
+  resize: vertical;
+}
+
+.grupo-campo input:focus,
+.grupo-campo textarea:focus {
+  outline: 3px solid var(--verde);
+  outline-offset: 2px;
+}
+
+.campo-imagem {
+  margin-bottom: 25px;
+  padding: 22px;
+
+  border: 3px solid #b56d49;
+  background-color: #f7e4bf;
+}
+
+.campo-imagem h2 {
+  margin: 0 0 8px;
+
+  color: var(--verde);
+  font-size: 1.2rem;
+}
+
+.campo-imagem > p {
+  line-height: 1.5;
+}
+
+.entrada-arquivo {
+  display: none;
+}
+
+.botao-imagem {
+  min-height: 46px;
+  padding: 10px 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid var(--verde-escuro);
+
+  background-color: var(--verde);
+  color: #fff8df;
+
+  box-shadow: 4px 4px 0 var(--sombra);
+
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.ajuda-imagem {
+  display: block;
+  margin-top: 12px;
+
+  color: #765d4c;
+
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.arquivo-selecionado,
+.aviso-imagem-atual {
+  margin-top: 18px;
+  padding: 13px;
+
+  border: 2px solid var(--verde);
+
+  background-color: #dce7ae;
+  color: var(--verde-escuro);
+
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.arquivo-selecionado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 12px;
+}
+
+.grupo-url-imagem {
+  margin-top: 22px;
+}
+
+.previsualizacao-imagem {
+  margin-top: 20px;
+  padding: 15px;
+
+  border: 3px dashed #b56d49;
+  background-color: #f4dfbe;
+}
+
+.cabecalho-previsualizacao {
+  margin-bottom: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  color: var(--verde-escuro);
+
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.botao-remover-imagem {
+  min-height: 38px;
+  padding: 7px 11px;
+
+  border: 2px solid #8d2e23;
+
+  background-color: #b63d2d;
+  color: #fff5d6;
+
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.previsualizacao-imagem img {
+  width: 100%;
+  height: 260px;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+.mensagem-erro-imagem,
+.mensagem-erro-formulario {
+  padding: 13px;
+
+  border: 3px solid var(--erro);
+
+  background-color: #ffd7c6;
+  color: var(--erro);
+
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.mensagem-erro-imagem {
+  margin-top: 17px;
+  font-size: 0.78rem;
+}
+
+.mensagem-erro-formulario {
+  margin-bottom: 23px;
+}
+
+.aviso-previsualizacao {
+  padding: 20px;
+
+  color: var(--erro);
+
+  font-weight: bold;
+  text-align: center;
+}
+
+.carregamento {
+  min-height: 350px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+
+  color: var(--verde-escuro);
+  font-weight: bold;
+}
+
+.carregamento ion-spinner {
+  width: 38px;
+  height: 38px;
+}
+
+.mensagem-erro {
+  padding: 25px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+
+  border: 3px solid var(--erro);
+
+  background-color: #ffd7c6;
+  color: var(--erro);
+
+  font-weight: bold;
+  text-align: center;
+}
+
+.acoes-formulario {
+  margin-top: 30px;
+
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.botao-padrao,
+.botao-secundario {
+  min-height: 47px;
+  padding: 10px 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border-radius: 0;
+
+  box-shadow: 4px 4px 0 var(--sombra);
+
+  font: inherit;
+  font-weight: bold;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.botao-padrao {
+  border: 3px solid #913c21;
+
+  background-color: var(--laranja);
+  color: #fff5d6;
+}
+
+.botao-secundario {
+  border: 3px solid var(--verde-escuro);
+
+  background-color: #dce7ae;
+  color: var(--verde-escuro);
+}
+
+.botao-padrao:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+@media (max-width: 620px) {
+  .conteudo-principal {
+    margin-top: 18px;
+  }
+
+  .cabecalho-pagina {
+    padding: 23px 17px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 1.65rem;
+  }
+
+  .formulario-receita {
+    padding: 23px 17px;
+  }
+
+  .campo-imagem {
+    padding: 17px 13px;
+  }
+
+  .botao-imagem,
+  .botao-remover-imagem {
+    width: 100%;
+  }
+
+  .cabecalho-previsualizacao {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .previsualizacao-imagem img {
+    height: 210px;
+  }
+
+  .acoes-formulario {
+    flex-direction: column-reverse;
+  }
+
+  .botao-padrao,
+  .botao-secundario {
+    width: 100%;
+  }
+}

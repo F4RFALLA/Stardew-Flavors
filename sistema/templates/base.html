@@ -1,0 +1,84 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}Stardew Flavors{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/estilo.css' %}"
+    >
+</head>
+
+<body>
+    <header class="cabecalho">
+        <div class="cabecalho-conteudo">
+            <a href="{% url 'home' %}" class="marca">
+                Stardew Flavors
+            </a>
+
+            <nav class="navegacao">
+                <a href="{% url 'home' %}">
+                    Início
+                </a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'criar_receita' %}">
+                        Adicionar receita
+                    </a>
+
+                    <a href="{% url 'listar_favoritos' %}">
+                        Favoritos
+                    </a>
+
+                    <span class="nome-usuario">
+                        Olá, {{ user.username }}
+                    </span>
+
+                    {% if user.is_staff %}
+                        <a href="{% url 'admin:index' %}">
+                            Painel administrativo
+                        </a>
+                    {% endif %}
+
+                    <a
+                        href="{% url 'logout' %}"
+                        class="botao-padrao"
+                    >
+                        Sair
+                    </a>
+                {% else %}
+                    <a
+                        href="{% url 'login' %}"
+                        class="botao-padrao"
+                    >
+                        Entrar
+                    </a>
+
+                    <a
+                        href="{% url 'cadastro' %}"
+                        class="botao-padrao"
+                    >
+                        Criar conta
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="conteudo-principal">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

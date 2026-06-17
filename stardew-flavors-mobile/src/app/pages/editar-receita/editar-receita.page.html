@@ -1,0 +1,302 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <main class="conteudo-principal">
+    <div
+      class="carregamento"
+      *ngIf="carregando"
+    >
+      <ion-spinner name="crescent"></ion-spinner>
+
+      <span>
+        Carregando receita...
+      </span>
+    </div>
+
+    <div
+      class="mensagem-erro"
+      *ngIf="!carregando && mensagemErro && !receita"
+    >
+      <span>
+        {{ mensagemErro }}
+      </span>
+
+      <button
+        type="button"
+        class="botao-padrao"
+        (click)="carregarReceita()"
+      >
+        Tentar novamente
+      </button>
+
+      <a
+        routerLink="/home"
+        class="botao-secundario"
+      >
+        Voltar ao início
+      </a>
+    </div>
+
+    <ng-container
+      *ngIf="!carregando && receita"
+    >
+      <section class="cabecalho-pagina">
+        <span class="rotulo-pagina">
+          Cozinha do Vale
+        </span>
+
+        <h1>
+          Editar receita
+        </h1>
+
+        <p>
+          Atualize as informações da sua receita.
+        </p>
+      </section>
+
+      <form
+        #formularioReceita="ngForm"
+        class="formulario-receita"
+        (ngSubmit)="salvarAlteracoes()"
+      >
+        <div
+          class="mensagem-erro-formulario"
+          *ngIf="mensagemErro"
+        >
+          {{ mensagemErro }}
+        </div>
+
+        <div class="grupo-campo">
+          <label for="titulo">
+            Título *
+          </label>
+
+          <input
+            id="titulo"
+            type="text"
+            name="titulo"
+            maxlength="200"
+            required
+            [(ngModel)]="formulario.titulo"
+          >
+        </div>
+
+        <div class="grupo-campo">
+          <label for="descricao">
+            Descrição *
+          </label>
+
+          <textarea
+            id="descricao"
+            name="descricao"
+            rows="4"
+            required
+            [(ngModel)]="formulario.descricao"
+          ></textarea>
+        </div>
+
+        <div class="grupo-campo">
+          <label for="origem">
+            Origem
+          </label>
+
+          <input
+            id="origem"
+            type="text"
+            name="origem"
+            maxlength="150"
+            [(ngModel)]="formulario.origem"
+          >
+        </div>
+
+        <section class="campo-imagem">
+          <h2>
+            Imagem da receita
+          </h2>
+
+          <p>
+            Escolha outra imagem para substituir
+            a imagem atual.
+          </p>
+
+          <input
+            #entradaGaleria
+            id="imagem-galeria-edicao"
+            class="entrada-arquivo"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            (change)="selecionarImagem($event)"
+          >
+
+          <label
+            for="imagem-galeria-edicao"
+            class="botao-imagem"
+          >
+            Escolher nova imagem
+          </label>
+
+          <small class="ajuda-imagem">
+            Formatos permitidos: JPG, JPEG, PNG e
+            WEBP. Tamanho máximo: 10 MB.
+          </small>
+
+          <div
+            class="arquivo-selecionado"
+            *ngIf="arquivoImagem"
+          >
+            <strong>
+              Nova imagem:
+            </strong>
+
+            <span>
+              {{ arquivoImagem.name }}
+            </span>
+
+            <span>
+              {{ tamanhoArquivoFormatado }}
+            </span>
+          </div>
+
+          <div
+            class="grupo-campo grupo-url-imagem"
+            *ngIf="
+              !receitaPossuiArquivoAtual
+              && !arquivoImagem
+            "
+          >
+            <label for="imagem_url">
+              URL da imagem
+            </label>
+
+            <input
+              id="imagem_url"
+              type="url"
+              name="imagem_url"
+              [(ngModel)]="formulario.imagem_url"
+              (ngModelChange)="alterarUrlImagem()"
+            >
+          </div>
+
+          <p
+            class="aviso-imagem-atual"
+            *ngIf="
+              receitaPossuiArquivoAtual
+              && !arquivoImagem
+            "
+          >
+            Esta receita possui uma imagem enviada.
+            Para alterá-la, escolha outro arquivo.
+          </p>
+
+          <div
+            class="mensagem-erro-imagem"
+            *ngIf="mensagemErroImagem"
+          >
+            {{ mensagemErroImagem }}
+          </div>
+
+          <div
+            class="previsualizacao-imagem"
+            *ngIf="imagemPrevisualizacao"
+          >
+            <div class="cabecalho-previsualizacao">
+              <span>
+                {{
+                  arquivoImagem
+                    ? 'Nova imagem'
+                    : 'Imagem atual'
+                }}
+              </span>
+
+              <button
+                *ngIf="arquivoImagem"
+                type="button"
+                class="botao-remover-imagem"
+                (click)="removerNovaImagem()"
+              >
+                Cancelar nova imagem
+              </button>
+            </div>
+
+            <img
+              *ngIf="!falhaPrevisualizacao"
+              [src]="imagemPrevisualizacao"
+              alt="Pré-visualização da receita"
+              (load)="previsualizacaoCarregada()"
+              (error)="previsualizacaoFalhou()"
+            >
+
+            <p
+              class="aviso-previsualizacao"
+              *ngIf="falhaPrevisualizacao"
+            >
+              Não foi possível exibir a imagem.
+            </p>
+          </div>
+        </section>
+
+        <div class="grupo-campo">
+          <label for="ingredientes">
+            Ingredientes *
+          </label>
+
+          <textarea
+            id="ingredientes"
+            name="ingredientes"
+            rows="8"
+            required
+            [(ngModel)]="formulario.ingredientes"
+          ></textarea>
+        </div>
+
+        <div class="grupo-campo">
+          <label for="modo_preparo">
+            Modo de preparo *
+          </label>
+
+          <textarea
+            id="modo_preparo"
+            name="modo_preparo"
+            rows="10"
+            required
+            [(ngModel)]="formulario.modo_preparo"
+          ></textarea>
+        </div>
+
+        <div class="acoes-formulario">
+          <a
+            [routerLink]="[
+              '/receitas',
+              receita.id
+            ]"
+            class="botao-secundario"
+          >
+            Cancelar
+          </a>
+
+          <button
+            type="submit"
+            class="botao-padrao"
+            [disabled]="
+              formularioReceita.invalid
+              || salvando
+            "
+          >
+            <ion-spinner
+              *ngIf="salvando"
+              name="crescent"
+            ></ion-spinner>
+
+            <span *ngIf="!salvando">
+              Salvar alterações
+            </span>
+
+            <span *ngIf="salvando">
+              Salvando...
+            </span>
+          </button>
+        </div>
+      </form>
+    </ng-container>
+  </main>
+</ion-content>

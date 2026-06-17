@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ receita.titulo }} | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <div class="voltar-receitas">
+        <a
+            href="{% url 'listar_receitas' %}"
+            class="botao-padrao"
+        >
+            ← Voltar às receitas
+        </a>
+    </div>
+
+    <article class="pagina-receita">
+        <section class="cabecalho-receita">
+            <div class="imagem-detalhes-receita">
+                {% if receita.imagem %}
+                    <img
+                        src="{{ receita.imagem.url }}"
+                        alt="{{ receita.titulo }}"
+                    >
+                {% elif receita.imagem_url %}
+                    <img
+                        src="{{ receita.imagem_url }}"
+                        alt="{{ receita.titulo }}"
+                    >
+                {% else %}
+                    <div class="receita-sem-imagem">
+                        Sem imagem
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="informacoes-receita">
+                <p class="rotulo">
+                    Receita do Vale
+                </p>
+
+                <h1>{{ receita.titulo }}</h1>
+
+                <p class="descricao-receita">
+                    {{ receita.descricao }}
+                </p>
+
+                <div class="metadados-receita">
+                    <p>
+                        <strong>Publicada por:</strong>
+                        {{ receita.autor.username }}
+                    </p>
+
+                    {% if receita.origem %}
+                        <p>
+                            <strong>Origem:</strong>
+                            {{ receita.origem }}
+                        </p>
+                    {% endif %}
+
+                    <p>
+                        <strong>Data:</strong>
+                        {{ receita.data_publicacao|date:"d/m/Y" }}
+                    </p>
+
+                    <p>
+                        <strong>Avaliação:</strong>
+                        {{ receita.media_avaliacoes }}/5
+                        —
+
+                        {{ receita.total_avaliacoes }}
+
+                        {% if receita.total_avaliacoes == 1 %}
+                            avaliação
+                        {% else %}
+                            avaliações
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="acoes-principais-receita">
+                    {% if user.is_authenticated %}
+                        <form
+                            action="{% url 'alternar_favorito' receita.pk %}"
+                            method="post"
+                            class="formulario-inline"
+                        >
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="botao-padrao"
+                            >
+                                {% if receita_favoritada %}
+                                    ♥ Remover dos favoritos
+                                {% else %}
+                                    ♡ Favoritar receita
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <a
+                            href="{% url 'login' %}"
+                            class="botao-padrao"
+                        >
+                            ♡ Entre para favoritar
+                        </a>
+                    {% endif %}
+                </div>
+                {% if user == receita.autor or user.is_staff %}
+                    <div class="acoes-receita">
+                        <a
+                            href="{% url 'editar_receita' receita.pk %}"
+                            class="botao-padrao"
+                        >
+                            Editar receita
+                        </a>
+
+                        <a
+                            href="{% url 'excluir_receita' receita.pk %}"
+                            class="botao-padrao"
+                        >
+                            Excluir receita
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="conteudo-da-receita">
+            <div class="secao-receita ingredientes-receita">
+                <h2>Ingredientes</h2>
+
+                <div class="texto-livre-receita">
+                    {{ receita.ingredientes|linebreaksbr }}
+                </div>
+            </div>
+
+            <div class="secao-receita preparo-receita">
+                <h2>Modo de preparo</h2>
+
+                <div class="texto-livre-receita">
+                    {{ receita.modo_preparo|linebreaksbr }}
+                </div>
+            </div>
+        </section>
+    </article>
+
+    <section class="area-comentarios">
+        <div class="titulo-comentarios">
+            <div>
+                <p class="rotulo">
+                    Experiências dos moradores
+                </p>
+
+                <h2>Comentários e avaliações</h2>
+            </div>
+
+            <span class="quantidade-comentarios">
+                {{ receita.total_avaliacoes }}
+
+                {% if receita.total_avaliacoes == 1 %}
+                    comentário
+                {% else %}
+                    comentários
+                {% endif %}
+            </span>
+        </div>
+
+        {% if user.is_authenticated %}
+            <div class="caixa-novo-comentario">
+                <h3>Comentar e avaliar</h3>
+
+                <p>
+                    Conte como ficou a receita ou deixe uma sugestão
+                    para outros moradores do Vale.
+                </p>
+
+                <form
+                    action="{% url 'criar_comentario' receita.pk %}"
+                    method="post"
+                    class="formulario-comentario"
+                >
+                    {% csrf_token %}
+
+                    <div class="grupo-campo">
+                        <label
+                            for="{{ formulario_comentario.nota.id_for_label }}"
+                        >
+                            {{ formulario_comentario.nota.label }}
+                        </label>
+
+                        {{ formulario_comentario.nota }}
+
+                        {% for erro in formulario_comentario.nota.errors %}
+                            <p class="erro-campo">
+                                {{ erro }}
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label
+                            for="{{ formulario_comentario.texto.id_for_label }}"
+                        >
+                            {{ formulario_comentario.texto.label }}
+                        </label>
+
+                        {{ formulario_comentario.texto }}
+
+                        {% for erro in formulario_comentario.texto.errors %}
+                            <p class="erro-campo">
+                                {{ erro }}
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    {% for erro in formulario_comentario.non_field_errors %}
+                        <p class="erro-campo">
+                            {{ erro }}
+                        </p>
+                    {% endfor %}
+
+                    <div class="acoes-formulario">
+                        <button
+                            type="submit"
+                            class="botao-padrao"
+                        >
+                            Publicar comentário
+                        </button>
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <div class="aviso-login-comentario">
+                <p>
+                    Entre em uma conta para comentar e avaliar esta receita.
+                </p>
+
+                <a
+                    href="{% url 'login' %}"
+                    class="botao-padrao"
+                >
+                    Entrar
+                </a>
+            </div>
+        {% endif %}
+
+        <div class="lista-comentarios">
+            {% for comentario in receita.comentarios.all %}
+                <article class="comentario">
+                    <div class="cabecalho-comentario">
+                        <strong>
+                            {{ comentario.autor.username }}
+                        </strong>
+
+                        <span class="nota-comentario">
+                            Nota: {{ comentario.nota }}/5
+                        </span>
+                    </div>
+
+                    <p class="data-comentario">
+                        {{ comentario.data_publicacao|date:"d/m/Y H:i" }}
+                    </p>
+
+                    <div class="texto-comentario">
+                        {{ comentario.texto|linebreaksbr }}
+                    </div>
+                    {% if user == comentario.autor or user.is_staff %}
+                        <div class="acoes-comentario">
+                            <a
+                                href="{% url 'editar_comentario' comentario.pk %}"
+                                class="botao-padrao"
+                            >
+                                Editar
+                            </a>
+
+                            <a
+                                href="{% url 'excluir_comentario' comentario.pk %}"
+                                class="botao-padrao"
+                            >
+                                Excluir
+                            </a>
+                        </div>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <div class="comentarios-vazios">
+                    <h3>Ainda não há comentários</h3>
+
+                    <p>
+                        Esta receita ainda não recebeu avaliações
+                        ou sugestões.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
+```

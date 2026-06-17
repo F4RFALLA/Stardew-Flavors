@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Criar conta | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="caixa-formulario">
+        <h1>Criar conta</h1>
+
+        <p class="descricao-formulario">
+            Crie uma conta para compartilhar receitas com os moradores do Vale.
+        </p>
+
+        <form action="{% url 'cadastro' %}" method="post">
+            {% csrf_token %}
+
+            <div class="grupo-campo">
+                <label for="{{ formulario.username.id_for_label }}">
+                    Nome de usuário
+                </label>
+
+                {{ formulario.username }}
+
+                {% if formulario.username.help_text %}
+                    <small class="ajuda-campo">
+                        {{ formulario.username.help_text }}
+                    </small>
+                {% endif %}
+
+                {% for erro in formulario.username.errors %}
+                    <p class="erro-campo">
+                        {{ erro }}
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="grupo-campo">
+                <label for="{{ formulario.password1.id_for_label }}">
+                    Senha
+                </label>
+
+                {{ formulario.password1 }}
+
+                {% if formulario.password1.help_text %}
+                    <div class="ajuda-campo">
+                        {{ formulario.password1.help_text|safe }}
+                    </div>
+                {% endif %}
+
+                {% for erro in formulario.password1.errors %}
+                    <p class="erro-campo">
+                        {{ erro }}
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="grupo-campo">
+                <label for="{{ formulario.password2.id_for_label }}">
+                    Confirme a senha
+                </label>
+
+                {{ formulario.password2 }}
+
+                {% if formulario.password2.help_text %}
+                    <small class="ajuda-campo">
+                        {{ formulario.password2.help_text }}
+                    </small>
+                {% endif %}
+
+                {% for erro in formulario.password2.errors %}
+                    <p class="erro-campo">
+                        {{ erro }}
+                    </p>
+                {% endfor %}
+            </div>
+
+            {% for erro in formulario.non_field_errors %}
+                <p class="erro-campo">
+                    {{ erro }}
+                </p>
+            {% endfor %}
+
+            <div class="acoes-formulario">
+                <a
+                    href="{% url 'login' %}"
+                    class="botao-padrao"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="botao-padrao"
+                >
+                    Criar conta
+                </button>
+            </div>
+        </form>
+
+        <p class="link-auxiliar">
+            Já possui uma conta?
+
+            <a href="{% url 'login' %}">
+                Entrar
+            </a>
+        </p>
+    </section>
+{% endblock %}

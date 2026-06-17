@@ -1,0 +1,260 @@
+:host {
+  --verde: #2f853f;
+  --verde-escuro: #256832;
+  --laranja: #c94e12;
+  --laranja-claro: #e26725;
+  --marrom: #9f5738;
+  --texto: #51382d;
+  --sombra: #b8a17d;
+}
+
+ion-header {
+  z-index: 1000;
+  overflow: visible;
+
+  box-shadow: none;
+}
+
+ion-toolbar {
+  --background: rgba(255, 238, 201, 0.98);
+  --color: var(--texto);
+  --padding-start: 0;
+  --padding-end: 0;
+
+  border-bottom: 4px solid var(--marrom);
+}
+
+.cabecalho-conteudo {
+  width: min(1100px, 92%);
+  min-height: 88px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  font-family: "Courier New", Courier, monospace;
+}
+
+.marca {
+  flex-shrink: 0;
+
+  color: var(--laranja);
+
+  font-size: 1.7rem;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: 2px 2px 0 #72361e;
+}
+
+.navegacao-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.navegacao-desktop > a:not(.botao-padrao),
+.navegacao-mobile > a:not(.botao-padrao) {
+  color: var(--verde-escuro);
+
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.navegacao-desktop > a:not(.botao-padrao):hover,
+.navegacao-mobile > a:not(.botao-padrao):hover {
+  text-decoration: underline;
+}
+
+.nome-usuario {
+  color: var(--verde-escuro);
+  font-weight: bold;
+}
+
+.botao-padrao {
+  min-height: 44px;
+  padding: 9px 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #913c21;
+  border-radius: 0;
+
+  background-color: var(--laranja);
+  color: #fff5d6;
+
+  box-shadow: 4px 4px 0 var(--sombra);
+
+  font: inherit;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.botao-padrao:hover {
+  background-color: var(--laranja-claro);
+}
+
+.botao-padrao:active {
+  transform: translate(3px, 3px);
+
+  box-shadow: 1px 1px 0 var(--sombra);
+}
+
+.botao-menu,
+.acoes-rapidas,
+.navegacao-mobile {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  ion-toolbar {
+    --min-height: 78px;
+  }
+
+  .cabecalho-conteudo {
+    width: 100%;
+    min-height: 78px;
+    padding: 12px 16px;
+
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .navegacao-desktop {
+    display: none;
+  }
+
+  .botao-menu {
+    width: 46px;
+    height: 46px;
+    padding: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+
+    border: 0;
+
+    background-color: transparent;
+
+    cursor: pointer;
+  }
+
+  .botao-menu span {
+    width: 32px;
+    height: 5px;
+
+    display: block;
+
+    border-radius: 5px;
+    background-color: var(--laranja);
+
+    transition:
+      transform 180ms ease,
+      opacity 180ms ease;
+  }
+
+  .botao-menu.ativo span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+  }
+
+  .botao-menu.ativo span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .botao-menu.ativo span:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+  }
+
+  .marca {
+    overflow: hidden;
+
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .acoes-rapidas {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .acoes-rapidas .botao-padrao {
+    min-height: 40px;
+    padding: 7px 13px;
+
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .navegacao-mobile {
+    padding: 18px 20px;
+
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+
+    border-bottom: 4px solid var(--marrom);
+
+    background-color: #fff0cb;
+    box-shadow: 0 6px 0 rgba(184, 161, 125, 0.75);
+
+    color: var(--texto);
+
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  .navegacao-mobile > a:not(.botao-padrao),
+  .navegacao-mobile .nome-usuario {
+    padding: 12px 8px;
+
+    border-bottom: 2px solid rgba(159, 87, 56, 0.35);
+  }
+
+  .navegacao-mobile .botao-padrao {
+    width: 100%;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cabecalho-conteudo {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .marca {
+    font-size: 1.15rem;
+    text-shadow: 1px 1px 0 #72361e;
+  }
+
+  .acoes-rapidas .botao-padrao {
+    min-height: 37px;
+    padding: 6px 9px;
+
+    font-size: 0.7rem;
+  }
+
+  .botao-menu {
+    width: 40px;
+  }
+
+  .botao-menu span {
+    width: 28px;
+    height: 4px;
+  }
+}

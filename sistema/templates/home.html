@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="apresentacao">
+        <p class="rotulo">Receitas do Vale</p>
+
+        <h1>Pratos caseiros direto da cozinha de Stardew Valley</h1>
+
+        {% if user.is_authenticated %}
+            <p>
+                Você entrou como
+                <strong>{{ user.username }}</strong>.
+            </p>
+
+            {% if user.is_staff %}
+                <p class="tipo-conta">
+                    Esta conta possui acesso administrativo.
+                </p>
+            {% else %}
+                <p class="tipo-conta">
+                    Esta é uma conta de usuário comum.
+                </p>
+            {% endif %}
+        {% else %}
+            <p>
+                Você pode visualizar as receitas livremente.
+                Para publicar, comentar ou favoritar,
+                entre em uma conta.
+            </p>
+
+            <div class="acoes-centralizadas">
+                <a
+                    href="{% url 'login' %}"
+                    class="botao-padrao"
+                >
+                    Entrar
+                </a>
+
+                <a
+                    href="{% url 'cadastro' %}"
+                    class="botao-padrao"
+                >
+                    Criar conta
+                </a>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

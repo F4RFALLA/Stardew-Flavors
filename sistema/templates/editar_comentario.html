@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Editar comentário | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="caixa-formulario">
+        <h1>Editar comentário</h1>
+
+        <p class="descricao-formulario">
+            Atualize sua avaliação ou sugestão para a receita
+            <strong>{{ comentario.receita.titulo }}</strong>.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="grupo-campo">
+                <label for="{{ form.nota.id_for_label }}">
+                    {{ form.nota.label }}
+                </label>
+
+                {{ form.nota }}
+
+                {% for erro in form.nota.errors %}
+                    <p class="erro-campo">
+                        {{ erro }}
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="grupo-campo">
+                <label for="{{ form.texto.id_for_label }}">
+                    {{ form.texto.label }}
+                </label>
+
+                {{ form.texto }}
+
+                {% for erro in form.texto.errors %}
+                    <p class="erro-campo">
+                        {{ erro }}
+                    </p>
+                {% endfor %}
+            </div>
+
+            {% for erro in form.non_field_errors %}
+                <p class="erro-campo">
+                    {{ erro }}
+                </p>
+            {% endfor %}
+
+            <div class="acoes-formulario">
+                <a
+                    href="{% url 'detalhar_receita' comentario.receita.pk %}"
+                    class="botao-padrao"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="botao-padrao"
+                >
+                    Salvar alterações
+                </button>
+            </div>
+        </form>
+    </section>
+{% endblock %}

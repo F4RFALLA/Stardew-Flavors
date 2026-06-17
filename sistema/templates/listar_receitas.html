@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="banner-receitas">
+        <p class="banner-rotulo">
+            Receitas do Vale
+        </p>
+
+        <h1>Stardew Flavors</h1>
+
+        <p>
+            Descubra e compartilhe pratos inspirados
+            no universo de Stardew Valley.
+        </p>
+    </section>
+
+    <section class="barra-receitas">
+        <form
+            method="get"
+            action="{% url 'listar_receitas' %}"
+            class="formulario-busca"
+        >
+            <input
+                type="search"
+                name="buscar"
+                value="{{ request.GET.buscar }}"
+                placeholder="Pesquisar receita, origem ou autor..."
+                aria-label="Pesquisar receitas"
+            >
+
+            <button
+                type="submit"
+                class="botao-padrao"
+            >
+                Pesquisar
+            </button>
+
+            {% if request.GET.buscar %}
+                <a
+                    href="{% url 'listar_receitas' %}"
+                    class="botao-padrao"
+                >
+                    Limpar
+                </a>
+            {% endif %}
+        </form>
+
+        {% if user.is_authenticated %}
+            <a
+                href="{% url 'criar_receita' %}"
+                class="botao-padrao"
+            >
+                + Adicionar receita
+            </a>
+        {% else %}
+            <a
+                href="{% url 'login' %}"
+                class="botao-padrao"
+            >
+                Entre para publicar
+            </a>
+        {% endif %}
+    </section>
+
+    <section class="grade-receitas">
+        {% for receita in receitas %}
+            <a
+                href="{% url 'detalhar_receita' receita.pk %}"
+                class="link-cartao-receita"
+            >
+                <article class="cartao-receita">
+                    <div class="cartao-imagem">
+                        {% if receita.imagem %}
+                            <img
+                                src="{{ receita.imagem.url }}"
+                                alt="{{ receita.titulo }}"
+                            >
+                        {% elif receita.imagem_url %}
+                            <img
+                                src="{{ receita.imagem_url }}"
+                                alt="{{ receita.titulo }}"
+                            >
+                        {% else %}
+                            <div class="receita-sem-imagem">
+                                Sem imagem
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="cartao-conteudo">
+                        <h2>{{ receita.titulo }}</h2>
+
+                        <p class="cartao-descricao">
+                            {{ receita.descricao }}
+                        </p>
+
+                        <div class="cartao-informacoes">
+                            <span>
+                                Por {{ receita.autor.username }}
+                            </span>
+
+                            {% if receita.origem %}
+                                <span>
+                                    Origem: {{ receita.origem }}
+                                </span>
+                            {% endif %}
+
+                            <span>
+                                Nota: {{ receita.media_avaliacoes }}/5
+                            </span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+        {% empty %}
+            <div class="lista-vazia">
+                {% if request.GET.buscar %}
+                    <h2>Nenhuma receita encontrada</h2>
+
+                    <p>
+                        Tente fazer uma busca usando outro termo.
+                    </p>
+                {% else %}
+                    <h2>Ainda não há receitas publicadas</h2>
+
+                    <p>
+                        Seja a primeira pessoa a compartilhar
+                        uma receita com o Vale.
+                    </p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

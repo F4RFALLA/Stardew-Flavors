@@ -1,0 +1,163 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <main class="conteudo-principal">
+    <section class="banner-receitas">
+      <span class="banner-rotulo">
+        Receitas do Vale
+      </span>
+
+      <h1>Stardew Flavors</h1>
+
+      <p>
+        Descubra e compartilhe pratos inspirados
+        no universo de Stardew Valley.
+      </p>
+    </section>
+
+    <section class="barra-receitas">
+      <form
+        class="formulario-busca"
+        (ngSubmit)="pesquisar()"
+      >
+        <input
+          type="search"
+          name="busca"
+          [(ngModel)]="busca"
+          placeholder="Buscar por receita, origem ou autor"
+          aria-label="Buscar receitas"
+        >
+
+        <button
+          type="submit"
+          class="botao-padrao"
+          [disabled]="carregando"
+        >
+          Buscar
+        </button>
+
+        <button
+          *ngIf="busca"
+          type="button"
+          class="botao-secundario"
+          [disabled]="carregando"
+          (click)="limparBusca()"
+        >
+          Limpar
+        </button>
+      </form>
+    </section>
+
+    <div
+      class="mensagem-erro"
+      *ngIf="mensagemErro"
+    >
+      <span>
+        {{ mensagemErro }}
+      </span>
+
+      <button
+        type="button"
+        class="botao-tentar"
+        (click)="carregarReceitas()"
+      >
+        Tentar novamente
+      </button>
+    </div>
+
+    <div
+      class="carregamento"
+      *ngIf="carregando"
+    >
+      <ion-spinner name="crescent"></ion-spinner>
+
+      <span>
+        Carregando receitas...
+      </span>
+    </div>
+
+    <section
+      class="grade-receitas"
+      *ngIf="!carregando && !mensagemErro"
+    >
+      <a
+        class="link-cartao-receita"
+        *ngFor="let receita of receitas"
+        [routerLink]="['/receitas', receita.id]"
+      >
+        <article class="cartao-receita">
+          <div class="cartao-imagem">
+            <img
+              *ngIf="receita.imagem_exibicao"
+              [src]="receita.imagem_exibicao"
+              [alt]="'Imagem da receita ' + receita.titulo"
+              loading="lazy"
+            >
+
+            <div
+              class="receita-sem-imagem"
+              *ngIf="!receita.imagem_exibicao"
+            >
+              Receita sem imagem
+            </div>
+          </div>
+
+          <div class="cartao-conteudo">
+            <div class="titulo-receita">
+              <h2>
+                {{ receita.titulo }}
+              </h2>
+
+              <span
+                class="favoritada"
+                *ngIf="receita.favoritada_pelo_usuario"
+                title="Receita favoritada"
+              >
+                ♥
+              </span>
+            </div>
+
+            <p class="cartao-descricao">
+              {{ receita.descricao }}
+            </p>
+
+            <div class="cartao-informacoes">
+              <span *ngIf="receita.origem">
+                Origem: {{ receita.origem }}
+              </span>
+
+              <span>
+                Autor: {{ receita.autor }}
+              </span>
+
+              <span>
+                Avaliação:
+                {{ receita.media_avaliacoes | number:'1.1-1' }}
+                / 5
+              </span>
+
+              <span>
+                {{ receita.total_avaliacoes }}
+                avaliação(ões)
+              </span>
+            </div>
+          </div>
+        </article>
+      </a>
+
+      <div
+        class="lista-vazia"
+        *ngIf="receitas.length === 0"
+      >
+        <h2>
+          Nenhuma receita encontrada
+        </h2>
+
+        <p>
+          Tente pesquisar usando outro título,
+          origem ou nome de autor.
+        </p>
+      </div>
+    </section>
+  </main>
+</ion-content>

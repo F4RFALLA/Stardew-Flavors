@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Excluir {{ receita.titulo }} | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="caixa-formulario">
+        <h1>Excluir receita</h1>
+
+        <p class="descricao-formulario">
+            Você realmente deseja excluir a receita
+            <strong>{{ receita.titulo }}</strong>?
+        </p>
+
+        <article class="resumo-receita-exclusao">
+            <div class="imagem-exclusao-receita">
+                {% if receita.imagem %}
+                    <img
+                        src="{{ receita.imagem.url }}"
+                        alt="{{ receita.titulo }}"
+                    >
+                {% elif receita.imagem_url %}
+                    <img
+                        src="{{ receita.imagem_url }}"
+                        alt="{{ receita.titulo }}"
+                    >
+                {% else %}
+                    <div class="receita-sem-imagem">
+                        Sem imagem
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <h2>{{ receita.titulo }}</h2>
+
+                <p>{{ receita.descricao }}</p>
+
+                <p>
+                    <strong>Publicada por:</strong>
+                    {{ receita.autor.username }}
+                </p>
+            </div>
+        </article>
+
+        <p class="aviso-exclusao">
+            Os comentários e favoritos relacionados a esta receita
+            também serão excluídos. Essa ação não poderá ser desfeita.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="acoes-formulario">
+                <a
+                    href="{% url 'detalhar_receita' receita.pk %}"
+                    class="botao-padrao"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="botao-padrao"
+                >
+                    Confirmar exclusão
+                </button>
+            </div>
+        </form>
+    </section>
+{% endblock %}

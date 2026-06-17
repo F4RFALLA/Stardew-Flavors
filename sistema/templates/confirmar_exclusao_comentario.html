@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Excluir comentário | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="caixa-formulario">
+        <h1>Excluir comentário</h1>
+
+        <p class="descricao-formulario">
+            Você realmente deseja excluir este comentário?
+        </p>
+
+        <article class="comentario comentario-confirmacao">
+            <div class="cabecalho-comentario">
+                <strong>
+                    {{ comentario.autor.username }}
+                </strong>
+
+                <span class="nota-comentario">
+                    Nota: {{ comentario.nota }}/5
+                </span>
+            </div>
+
+            <div class="texto-comentario">
+                {{ comentario.texto|linebreaksbr }}
+            </div>
+        </article>
+
+        <p class="aviso-exclusao">
+            Essa ação não poderá ser desfeita.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="acoes-formulario">
+                <a
+                    href="{% url 'detalhar_receita' comentario.receita.pk %}"
+                    class="botao-padrao"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="botao-padrao"
+                >
+                    Confirmar exclusão
+                </button>
+            </div>
+        </form>
+    </section>
+{% endblock %}

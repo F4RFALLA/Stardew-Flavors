@@ -1,0 +1,399 @@
+:host {
+  --fundo: #f8e8c5;
+  --fundo-claro: #fff3d5;
+  --verde: #2f853f;
+  --verde-escuro: #256832;
+  --laranja: #c94e12;
+  --laranja-claro: #e26725;
+  --marrom: #9f5738;
+  --texto: #51382d;
+  --sombra: #b8a17d;
+  --erro: #a52d22;
+}
+
+ion-content {
+  --background:
+    radial-gradient(
+      circle at top left,
+      #ffe0a5 0,
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      #e4e9af 0,
+      transparent 34%
+    ),
+    var(--fundo);
+}
+
+.conteudo-principal {
+  width: min(1100px, 92%);
+  margin: 36px auto;
+  padding-bottom: 34px;
+
+  color: var(--texto);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.titulo-pagina {
+  margin-bottom: 32px;
+  padding: 30px;
+
+  border: 4px double var(--marrom);
+
+  background-color: rgba(255, 245, 219, 0.97);
+  box-shadow: 7px 7px 0 var(--sombra);
+
+  text-align: center;
+}
+
+.titulo-pagina > span {
+  color: var(--verde);
+
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+.titulo-pagina h1 {
+  margin: 8px 0 12px;
+
+  color: var(--laranja);
+
+  font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.titulo-pagina p {
+  margin: 0;
+
+  line-height: 1.6;
+}
+
+.grade-favoritos {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.cartao-receita {
+  min-width: 0;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 4px double var(--marrom);
+
+  background-color: var(--fundo-claro);
+  box-shadow: 7px 7px 0 var(--sombra);
+}
+
+.conteudo-link {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+.cartao-imagem {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+
+  overflow: hidden;
+
+  border-bottom: 4px double var(--marrom);
+  background-color: #e8d0a9;
+}
+
+.cartao-imagem img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.receita-sem-imagem {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #795b48;
+
+  font-weight: bold;
+  text-align: center;
+}
+
+.cartao-conteudo {
+  flex: 1;
+  padding: 20px;
+}
+
+.titulo-receita {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.titulo-receita h2 {
+  margin: 0;
+
+  color: var(--laranja);
+
+  font-size: 1.35rem;
+  overflow-wrap: anywhere;
+}
+
+.icone-coracao {
+  flex-shrink: 0;
+
+  color: var(--laranja);
+
+  font-size: 1.4rem;
+}
+
+.descricao-receita {
+  margin: 14px 0;
+
+  line-height: 1.5;
+}
+
+.informacoes-receita {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  color: var(--verde-escuro);
+
+  font-size: 0.82rem;
+  font-weight: bold;
+}
+
+.acoes-cartao {
+  padding: 0 20px 20px;
+}
+
+.botao-remover {
+  width: 100%;
+  min-height: 45px;
+  padding: 9px 14px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 3px solid #8c2b20;
+  border-radius: 0;
+
+  background-color: #b63d2d;
+  color: #fff5d6;
+
+  box-shadow: 4px 4px 0 var(--sombra);
+
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.botao-remover:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.botao-remover ion-spinner {
+  width: 20px;
+  height: 20px;
+
+  color: currentColor;
+}
+
+.carregamento {
+  min-height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+
+  color: var(--verde-escuro);
+  font-weight: bold;
+}
+
+.carregamento ion-spinner {
+  width: 38px;
+  height: 38px;
+}
+
+.mensagem-erro,
+.mensagem-acao {
+  margin-bottom: 26px;
+  padding: 18px;
+
+  border: 3px solid var(--verde-escuro);
+
+  background-color: #dce7ae;
+  color: var(--verde-escuro);
+
+  font-weight: bold;
+  text-align: center;
+}
+
+.mensagem-erro,
+.mensagem-acao-erro {
+  border-color: var(--erro);
+
+  background-color: #ffd7c6;
+  color: var(--erro);
+}
+
+.mensagem-erro {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.botao-padrao {
+  min-height: 45px;
+  padding: 9px 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #913c21;
+
+  background-color: var(--laranja);
+  color: #fff5d6;
+
+  box-shadow: 4px 4px 0 var(--sombra);
+
+  font: inherit;
+  font-weight: bold;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.lista-vazia {
+  padding: 35px;
+
+  border: 4px double var(--marrom);
+
+  background-color: rgba(255, 245, 219, 0.97);
+  box-shadow: 7px 7px 0 var(--sombra);
+
+  text-align: center;
+}
+
+.lista-vazia h2 {
+  margin-top: 0;
+
+  color: var(--verde);
+}
+
+.lista-vazia p {
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .grade-favoritos {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .conteudo-principal {
+    width: calc(100% - 24px);
+    margin: 18px auto;
+  }
+
+  .titulo-pagina {
+    width: calc(100% - 28px);
+    max-width: 390px;
+    margin: 0 auto 26px;
+    padding: 21px 17px;
+
+    box-shadow: 4px 4px 0 var(--sombra);
+  }
+
+  .titulo-pagina h1 {
+    font-size: 1.7rem;
+  }
+
+  .titulo-pagina p {
+    font-size: 0.8rem;
+  }
+
+  .grade-favoritos {
+    width: calc(100% - 28px);
+    max-width: 390px;
+    margin: 0 auto;
+
+    grid-template-columns: 1fr;
+    gap: 23px;
+  }
+
+  .cartao-receita {
+    box-shadow: 4px 4px 0 var(--sombra);
+  }
+
+  .cartao-imagem {
+    aspect-ratio: 1 / 1;
+  }
+
+  .cartao-conteudo {
+    padding: 15px;
+  }
+
+  .titulo-receita h2 {
+    font-size: 1.05rem;
+  }
+
+  .descricao-receita {
+    font-size: 0.78rem;
+  }
+
+  .informacoes-receita {
+    font-size: 0.72rem;
+  }
+
+  .acoes-cartao {
+    padding: 0 15px 15px;
+  }
+
+  .botao-remover {
+    font-size: 0.74rem;
+  }
+
+  .lista-vazia {
+    width: calc(100% - 28px);
+    max-width: 390px;
+    margin: 0 auto;
+    padding: 25px 18px;
+
+    box-shadow: 4px 4px 0 var(--sombra);
+  }
+
+  .lista-vazia h2 {
+    font-size: 1.2rem;
+  }
+
+  .lista-vazia p {
+    font-size: 0.78rem;
+  }
+}

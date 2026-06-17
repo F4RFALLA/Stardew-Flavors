@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Meus favoritos | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="banner-receitas">
+        <p class="banner-rotulo">
+            Seu livro de receitas
+        </p>
+
+        <h1>Meus favoritos</h1>
+
+        <p>
+            Aqui estão as receitas que você guardou
+            para encontrar novamente depois.
+        </p>
+    </section>
+
+    <div class="barra-receitas">
+        <a
+            href="{% url 'listar_receitas' %}"
+            class="botao-padrao"
+        >
+            ← Ver todas as receitas
+        </a>
+    </div>
+
+    <section class="grade-receitas">
+        {% for receita in receitas %}
+            <a
+                href="{% url 'detalhar_receita' receita.pk %}"
+                class="link-cartao-receita"
+            >
+                <article class="cartao-receita">
+                    <div class="cartao-imagem">
+                        {% if receita.imagem %}
+                            <img
+                                src="{{ receita.imagem.url }}"
+                                alt="{{ receita.titulo }}"
+                            >
+                        {% elif receita.imagem_url %}
+                            <img
+                                src="{{ receita.imagem_url }}"
+                                alt="{{ receita.titulo }}"
+                            >
+                        {% else %}
+                            <div class="receita-sem-imagem">
+                                Sem imagem
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="cartao-conteudo">
+                        <h2>{{ receita.titulo }}</h2>
+
+                        <p class="cartao-descricao">
+                            {{ receita.descricao }}
+                        </p>
+
+                        <div class="cartao-informacoes">
+                            <span>
+                                Por {{ receita.autor.username }}
+                            </span>
+
+                            {% if receita.origem %}
+                                <span>
+                                    Origem: {{ receita.origem }}
+                                </span>
+                            {% endif %}
+
+                            <span>
+                                Nota: {{ receita.media_avaliacoes }}/5
+                            </span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+        {% empty %}
+            <div class="lista-vazia">
+                <h2>Você ainda não favoritou nenhuma receita</h2>
+
+                <p>
+                    Abra uma receita e clique em
+                    “Favoritar receita” para guardá-la aqui.
+                </p>
+
+                <a
+                    href="{% url 'listar_receitas' %}"
+                    class="botao-padrao"
+                >
+                    Conhecer receitas
+                </a>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

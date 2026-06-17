@@ -1,0 +1,257 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <main class="conteudo-principal">
+    <section class="cabecalho-pagina">
+      <span class="rotulo-pagina">
+        Cozinha do Vale
+      </span>
+
+      <h1>
+        Adicionar receita
+      </h1>
+
+      <p>
+        Compartilhe com a comunidade uma receita
+        inspirada no universo de Stardew Valley.
+      </p>
+    </section>
+
+    <form
+      #formularioReceita="ngForm"
+      class="formulario-receita"
+      (ngSubmit)="enviarFormulario()"
+    >
+      <div
+        class="mensagem-erro"
+        *ngIf="mensagemErro"
+      >
+        {{ mensagemErro }}
+      </div>
+
+      <div class="grupo-campo">
+        <label for="titulo">
+          Título *
+        </label>
+
+        <input
+          id="titulo"
+          type="text"
+          name="titulo"
+          maxlength="200"
+          required
+          [(ngModel)]="formulario.titulo"
+          placeholder="Ex.: Bolo rosa"
+        >
+      </div>
+
+      <div class="grupo-campo">
+        <label for="descricao">
+          Descrição *
+        </label>
+
+        <textarea
+          id="descricao"
+          name="descricao"
+          rows="4"
+          required
+          [(ngModel)]="formulario.descricao"
+          placeholder="Conte um pouco sobre a receita..."
+        ></textarea>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="origem">
+          Origem
+        </label>
+
+        <input
+          id="origem"
+          type="text"
+          name="origem"
+          maxlength="150"
+          [(ngModel)]="formulario.origem"
+          placeholder="Ex.: Vila Pelicanos"
+        >
+      </div>
+
+      <section class="campo-imagem">
+        <h2>
+          Imagem da receita
+        </h2>
+
+        <p>
+          Escolha uma imagem da galeria ou informe
+          uma URL.
+        </p>
+
+        <input
+          #entradaGaleria
+          id="imagem-galeria"
+          class="entrada-arquivo"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          (change)="selecionarImagem($event)"
+        >
+
+        <div class="acoes-imagem">
+          <label
+            for="imagem-galeria"
+            class="botao-imagem"
+          >
+            Escolher da galeria
+          </label>
+        </div>
+
+        <small class="ajuda-imagem">
+          Formatos permitidos: JPG, JPEG, PNG e
+          WEBP. Tamanho máximo: 10 MB.
+        </small>
+
+        <div
+          class="arquivo-selecionado"
+          *ngIf="arquivoImagem"
+        >
+          <strong>
+            Arquivo selecionado:
+          </strong>
+
+          <span>
+            {{ arquivoImagem.name }}
+          </span>
+
+          <span>
+            {{ tamanhoArquivoFormatado }}
+          </span>
+        </div>
+
+        <div class="separador-imagem">
+          <span>ou</span>
+        </div>
+
+        <div class="grupo-campo grupo-url-imagem">
+          <label for="imagem_url">
+            URL da imagem
+          </label>
+
+          <input
+            id="imagem_url"
+            type="url"
+            name="imagem_url"
+            [disabled]="arquivoImagem !== null"
+            [(ngModel)]="formulario.imagem_url"
+            (ngModelChange)="alterarUrlImagem()"
+            placeholder="https://exemplo.com/imagem.jpg"
+          >
+
+          <small>
+            A URL será usada somente quando nenhum
+            arquivo estiver selecionado.
+          </small>
+        </div>
+
+        <div
+          class="mensagem-erro-imagem"
+          *ngIf="mensagemErroImagem"
+        >
+          {{ mensagemErroImagem }}
+        </div>
+
+        <div
+          class="previsualizacao-imagem"
+          *ngIf="imagemPrevisualizacao"
+        >
+          <div class="cabecalho-previsualizacao">
+            <span>
+              Pré-visualização
+            </span>
+
+            <button
+              type="button"
+              class="botao-remover-imagem"
+              (click)="removerImagem()"
+            >
+              Remover imagem
+            </button>
+          </div>
+
+          <img
+            *ngIf="!falhaPrevisualizacao"
+            [src]="imagemPrevisualizacao"
+            alt="Pré-visualização da receita"
+            (load)="previsualizacaoCarregada()"
+            (error)="previsualizacaoFalhou()"
+          >
+
+          <p
+            class="aviso-previsualizacao"
+            *ngIf="falhaPrevisualizacao"
+          >
+            Não foi possível exibir a imagem.
+          </p>
+        </div>
+      </section>
+
+      <div class="grupo-campo">
+        <label for="ingredientes">
+          Ingredientes *
+        </label>
+
+        <textarea
+          id="ingredientes"
+          name="ingredientes"
+          rows="8"
+          required
+          [(ngModel)]="formulario.ingredientes"
+          placeholder="Digite um ingrediente por linha..."
+        ></textarea>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="modo_preparo">
+          Modo de preparo *
+        </label>
+
+        <textarea
+          id="modo_preparo"
+          name="modo_preparo"
+          rows="10"
+          required
+          [(ngModel)]="formulario.modo_preparo"
+          placeholder="Descreva as etapas do preparo..."
+        ></textarea>
+      </div>
+
+      <div class="acoes-formulario">
+        <a
+          routerLink="/home"
+          class="botao-secundario"
+        >
+          Cancelar
+        </a>
+
+        <button
+          type="submit"
+          class="botao-padrao"
+          [disabled]="
+            formularioReceita.invalid
+            || salvando
+          "
+        >
+          <ion-spinner
+            *ngIf="salvando"
+            name="crescent"
+          ></ion-spinner>
+
+          <span *ngIf="!salvando">
+            Publicar receita
+          </span>
+
+          <span *ngIf="salvando">
+            Publicando...
+          </span>
+        </button>
+      </div>
+    </form>
+  </main>
+</ion-content>

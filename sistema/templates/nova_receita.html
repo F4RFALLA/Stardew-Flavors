@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Adicionar receita | Stardew Flavors
+{% endblock %}
+
+{% block content %}
+    <section class="caixa-formulario caixa-formulario-grande">
+        <p class="rotulo">Receitas do Vale</p>
+
+        <h1>Adicionar nova receita</h1>
+
+        <p class="descricao-formulario">
+            Compartilhe os ingredientes e o modo de preparo
+            da sua receita.
+        </p>
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+        >
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="grupo-campo">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.name == 'imagem' %}
+                        <small class="ajuda-campo">
+                            Selecione uma imagem salva no computador
+                            ou dispositivo.
+                        </small>
+                    {% elif field.name == 'imagem_url' %}
+                        <small class="ajuda-campo">
+                            Opcional. Use apenas se preferir uma imagem
+                            disponível na internet.
+                        </small>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <small class="ajuda-campo">
+                            {{ field.help_text }}
+                        </small>
+                    {% endif %}
+
+                    {% for erro in field.errors %}
+                        <p class="erro-campo">
+                            {{ erro }}
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% for erro in form.non_field_errors %}
+                <p class="erro-campo">
+                    {{ erro }}
+                </p>
+            {% endfor %}
+
+            <div class="acoes-formulario">
+                <a
+                    href="{% url 'listar_receitas' %}"
+                    class="botao-padrao"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="botao-padrao"
+                >
+                    Publicar receita
+                </button>
+            </div>
+        </form>
+    </section>
+{% endblock %}
